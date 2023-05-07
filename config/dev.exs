@@ -8,7 +8,14 @@ config :amnesiac, Amnesiac.Repo,
   database: "amnesiac_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+  pool_size: 10,
+  migration_primary_key: [
+    name: :id,
+    type: :binary_id,
+    autogenerate: false,
+    read_after_writes: true,
+    default: {:fragment, "uuid_generate_v4()"}
+  ]
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
