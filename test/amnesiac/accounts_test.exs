@@ -92,6 +92,11 @@ defmodule Amnesiac.AccountsTest do
       assert is_nil(user.confirmed_at)
       assert is_nil(user.password)
     end
+
+    test "create organization for new users" do
+      {:ok, user} = Accounts.register_user(valid_user_attributes())
+      refute is_nil(user.organization_id)
+    end
   end
 
   describe "change_user_registration/2" do

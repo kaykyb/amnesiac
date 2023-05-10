@@ -6,7 +6,10 @@ defmodule Amnesiac.Accounts do
   import Ecto.Query, warn: false
   alias Amnesiac.Repo
 
-  alias Amnesiac.Accounts.{User, UserToken, UserNotifier}
+  alias Amnesiac.Accounts.Organization
+  alias Amnesiac.Accounts.User
+  alias Amnesiac.Accounts.UserNotifier
+  alias Amnesiac.Accounts.UserToken
 
   ## Database getters
 
@@ -74,10 +77,17 @@ defmodule Amnesiac.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
+  @initial_org %Organization{
+    name: "Default"
+  }
   def register_user(attrs) do
-    %User{}
-    |> User.registration_changeset(attrs)
-    |> Repo.insert()
+    with {:ok, new_org} <- Repo.insert(@initial_org) do
+      %User{
+        organization_id: new_org.id
+      }
+      |> User.registration_changeset(attrs)
+      |> Repo.insert()
+    end
   end
 
   @doc """
